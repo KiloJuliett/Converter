@@ -1,0 +1,58 @@
+## Database of items associated with the metric system.
+## 
+## This file contains descriptions of units and items that are in common use in
+## the "metric system" outside of the scope of the SI. This includes systems and
+## units that predate the SI or are in common use within the international
+## community despite not having official status within the SI.
+
+
+
+# Alternative form of deca-.
+# 
+# I remember having a composition
+# notebook in 5th grade with a table of metric prefixes on the
+# inside cover, and I could swear that the table showed the
+# symbol for deka- (with a k 'cause America) as being "dk". And
+# Mrs. Kane would never lie to me!
+# TODO Citation needed
+P | dk | 1e1
+
+# Alternative form of micro-.
+# 
+# If limited to the Latin script, it
+# is common practice to substitute the Greek lowercase mu for the
+# Latin lowercase U when writing micro-. I have no citation for
+# this, it's just something I feel I've seen a lot and have done
+# myself.
+# TODO Citation needed
+P | u  | 1e-6  
+
+# Citations for all of this!
+
+# Quotes for minutes and seconds
+# Angstrom
+# Parsec
+# Ohm as "ohm"
+# degree Kelvin
+# Nautical mile
+# Knot
+# Millimetre of mercury (probably metre of mercury)
+# Kilogram-force (probably gram-force)
+# Cycles, cycles per second
+# cps, rpm
+# eV/c^2 (also define c?)
+# cc instead of ml
+# "g"s for acceleration
+# kilowatt-hour (probably watt-hour)
+# deg for degree
+# arcmin for arcminute
+# arcsec for arcsecond
+# molarity, molality
+
+# Gal
+# Dyne
+# Erg
+# Barye
+# Poise
+# Stokes
+# Kayser

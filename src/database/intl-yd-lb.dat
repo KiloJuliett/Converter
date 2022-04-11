@@ -1,0 +1,69 @@
+## Database of British Imperial and US Customary units of length and mass.
+## 
+## This file contains descriptions of units of length and mass that follow from
+## the adoption of the international yard and pound avoirdupois and which form
+## the basis for the British Imperial and US Customary systems of units, where
+## they agree.
+
+
+## The (international) yard, defined as exactly 0.914 4 metres [1].
+U | yd | LEN | 0.914 4
+
+## The (international) foot, defined as exactly 1/3 (international) yards.
+U | ft | LEN | 0.304 8
+
+## The (international) inch, defined as exactly 1/12 (international) feet.
+U | in | LEN | 0.025 4
+
+## The (international) rod, defined as exactly 16.5 (internationl) feet.
+U | rd | LEN | 5.029 2
+
+## The (international) furlong, defined as exactly 40 (international) rods.
+U | fur | LEN | 201.168
+
+## The (international) mile, defined as exactly 8 (international) rods.
+U | mi | LEN | 1 609.344
+
+
+
+# The mile is not defined here...
+
+
+
+## The (international) pound avoirdupois, defined as exactly 0.453 592 37 kg
+## [1].
+U | lb | MAS | 0.453 592 37
+
+## The (international) ounce avoirdupois, defined as exactly 1/16 lb.
+U | oz | MAS | 0.028 349 523 125
+
+
+
+## The pound-force, defined as 1 (international) pound avoirdupois multiplied by
+## the standard acceleration due to gravity (itself defined as exactly
+## 9.806 65 m/s²).
+U | lbf | MAS * LEN * TIM^-2 | 4.448 221 615 260 5
+
+## The ounce-force, defined as 1 (international) ounce avoirdupois multiplied by
+## the standard acceleration due to gravity (itself defined as exactly
+## 9.806 65 m/s²).
+U | ozf | MAS * LEN * TIM^-2 | 0.278 013 850 953 781 25
+
+## Sometimes, symbols of units of mass are used to represent their equivalent
+## standard-acceleration-due-to-gravity force units.
+U | lb | MAS * LEN * TIM^-2 | 4.448 221 615 260 5
+U | oz | MAS * LEN * TIM^-2 | 0.278 013 850 953 781 25
+
+
+## The (international) pound per square inch (psi)
+
+
+
+
+## References
+## 
+## [1]: National Archives and Records Administration, "Refinement of Values for
+##      the Yard and Pound," *Federal Register*, vol. 24, no. 128, p. 5348. July
+##      1959.
+## [2]: *The International System of Units (SI) - Conversion Factors for General
+##      Use*, National Institute of Standards and Technology, May 2006.

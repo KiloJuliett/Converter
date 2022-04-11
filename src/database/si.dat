@@ -1,0 +1,298 @@
+## Database of SI items.
+## 
+## This file contains descriptions of units and items that, together, constitute
+## the International System of Units (SI), as specified in the SI Brochure.
+## The supremacy of the SI is beyond question; almost all other systems of units
+## define their primitives in terms of SI units.
+## 
+## The *set of coherent SI units* have special
+## status as the reference units. These units are assigned a magnitude of one by
+## the Unit Converter; thus, unit conversion can be described as converting to
+## and from some relevant coherent SI unit.
+
+
+
+## Base dimensions.
+## 
+## This section describes the base dimensions in use by the SI. These are *not*
+## the base dimensions described by the SI brochure; in particular, since this
+## converter cannot handle dimensionless quantities, the quantities of plane and
+## solid angle are described as base dimensions.
+
+## Time.
+B | TIM
+
+## Length.
+B | LEN
+
+## Mass.
+B | MAS
+
+## Electric current.
+B | CUR
+
+## Thermodynamic temperature.
+B | TMP 
+
+## Amount of substance.
+B | MOL
+
+## Luminous intensity.
+B | LUM
+
+## Plane angle.
+B | ANG
+
+## Solid angle.
+#B | AGS
+
+
+
+## SI prefixes.
+## 
+## This section describes the SI multiple and submultiple prefixes.
+
+# Yocto-.
+P | y | 1e-24
+
+# Zepto-.
+P | z | 1e-21
+
+# Atto-.
+P | a | 1e-18
+
+# Femto-.
+P | f | 1e-15
+
+# Pico-.
+P | p | 1e-12
+
+# Nano-.
+P | n | 1e-9
+
+# Micro-.
+P | μ | 1e-6
+
+# Milli-.
+P | m | 1e-3
+
+# Centi-.
+P | c | 1e-2
+
+# Deci-.
+P | d | 1e-1
+
+# Deca-.
+P | da | 1e1
+
+# Hecto-.
+P | h | 1e2
+
+# Kilo-.
+P | k | 1e3
+
+# Mega-.
+P | M | 1e6
+
+# Giga-.
+P | G | 1e9
+
+# Tera-.
+P | T | 1e12
+
+# Peta-.
+P | P | 1e15
+
+# Exa-.
+P | E | 1e18
+
+# Zetta-.
+P | Z | 1e21
+
+# Yotta-.
+P | Y | 1e24
+
+
+
+## Named SI units.
+## 
+## This section describes the named coherent SI units.
+
+## The second.
+U | s | TIM | 1
+
+## The metre.
+U | m | LEN | 1
+
+## The kilogram. For historical reasons, the multiples and submultiples of the
+## kilogram are assigned as though the gram were the coherent SI unit.
+U | g | MAS | 0.001
+
+## The ampere.
+U | A | CUR | 1
+
+## The kelvin.
+U | K | TMP | 1
+
+## The mole.
+U | mol | MOL | 1
+
+## The candela.
+U | cd | LUM | 1
+
+## The radian.
+U | rad | ANG | 1
+
+## The steradian.
+U | sr | ANG^2 | 1
+
+## The hertz.
+U | Hz | TIM^-1 | 1
+
+## The newton.
+U | N | MAS * LEN * TIM^-2 | 1
+
+## The pascal.
+U | Pa | MAS * LEN^-1 * TIM^-2 | 1
+
+## The joule.
+U | J | MAS * LEN^2 * TIM^-2 | 1
+
+## The watt.
+U | W | MAS * LEN^2 * TIM^-3 | 1
+
+## The coulomb.
+U | C | CUR * TIM | 1
+
+## The volt.
+U | V | MAS * LEN^2 * TIM^-3 * CUR^-1 | 1
+
+## The farad.
+U | F | MAS^-1 * LEN^-2 * TIM^4 * CUR^2 | 1
+
+## The ohm.
+U | Ω | MAS * LEN^2 * TIM^-3 * CUR^-2 | 1
+
+## The siemens.
+U | S | MAS^-1 * LEN^-2 * TIM^3 * CUR^2 | 1
+
+## The weber.
+U | Wb | MAS * LEN^2 * TIM^-2 * CUR^-1 | 1
+
+## The tesla.
+U | T | MAS * TIM^-2 * CUR^-1 | 1
+
+## The henry.
+U | H | MAS * LEN^2 * TIM^-2 * CUR^-2 | 1
+
+## The degree Celsius.
+U | °C | TMP | 1 + 273.15
+
+## The lumen.
+U | lm | LUM * ANG^2 | 1
+
+## The lux.
+U | lx | LUM * ANG^2 * LEN^-2 | 1
+
+## The becquerel.
+U | Bq | TIM^-1 | 1
+
+## The gray.
+U | Gy | LEN^2 * TIM^-2 | 1
+
+## The sievert.
+U | Sv | LEN^2 * TIM^-2 | 1
+
+## The katal.
+U | kat | MOL * TIM^-1 | 1
+
+
+
+## Units accepted for use with the SI.
+## 
+## This series of records describes non-SI units accepted for use with the SI.
+
+## The minute, defined as exactly 60 seconds.
+U | min | TIM | 60
+
+## The hour, defined as exactly 60 minutes.
+U | h | TIM | 3 600
+
+## The day, defined as exactly 24 hours.
+U | d | TIM | 86 400
+
+## The astronomical unit, defined as exactly 149 597 870 700 metres.
+U | au | LEN | 149 597 870 700
+
+## The degree, defined as exactly π/180 radians.
+U | ° | ANG | π/180 # TODO allow no space between magnitude and symbol
+
+## The minute, defined as exactly 1/60 degrees.
+U | ′ | ANG | π/10 800 # TODO allow no space between magnitude and symbol
+
+## The second, defined as exactly 1/60 minutes.
+U | ″ | ANG | π/648 000 # TODO allow no space between magnitude and symbol
+
+## The hectare, defined as exactly 10 000 square metres.
+U | ha | LEN^2 | 10 000
+
+## The litre, defined as exactly 0.001 cubic metres.
+U | l | LEN^3 | 0.001
+U | L | LEN^3 | 0.001 # TODO should we implement A-records?
+
+## The tonne, defined as exactly 1 000 kilograms.
+U | t | MAS | 1 000
+
+## The dalton, accepted to be approximately 1.660 539 066 60(50)e-27 kilograms.
+U | da | MAS | 1.660 539 066 60e-27 # TODO flag for inexact
+
+## The electronvolt, defined as exactly 1.602 176 634e-19 joules.
+U | eV | MAS * LEN^2 * TIM^-2 | 1.602 176 634e-19
+
+
+
+
+
+
+# TODO learn more about field and power logarithmic quantities and how they
+# relate to each other. It seems that a generic conversion between units of LOGE
+# and LOGD is impossible because of the ambiguity of whether the units describe
+# field quantities or power quantities; conversion is only meaningful when they
+# are precisely defined. I think W-records are probably the right mechanism for
+# getting this behaviour.
+
+# TODO Maybe the use of "intervals" might be better? Plus it would generalize
+# better with things like musical cents and whatnot.
+
+## The neper.
+## 
+## This series of records describe the neper (symbol: Np), a non-SI unit of
+## natural logarithmic ratio quantities.
+# Q | LOGE
+# U | Np | | LOGE | 1
+
+## The bel.
+## 
+## This series of records describe the bel (symbol: B) and with it the decibel
+## (symbol: dB), non-SI units of base-10 logarithmic ratio quantities
+##.
+# Q | LOGD
+# U | B | | LOGD | 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+## References
+## 
+##: Bureau international des poids et mesures, *Le Système international
+##      d'unités / The International System of Units*, 9 ed. Sèvres, France:
+##      BIPM, 2019.
