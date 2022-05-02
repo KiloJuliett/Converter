@@ -3,12 +3,10 @@
 ## This file contains descriptions of units and items that, together, constitute
 ## the International System of Units (SI), as specified in the SI Brochure.
 ## The supremacy of the SI is beyond question; almost all other systems of units
-## define their primitives in terms of SI units.
-## 
-## The *set of coherent SI units* have special
-## status as the reference units. These units are assigned a magnitude of one by
-## the Unit Converter; thus, unit conversion can be described as converting to
-## and from some relevant coherent SI unit.
+## define their primitives in terms of SI units. The *set of coherent SI units*
+## have special status as the reference units. These units are assigned a
+## magnitude of one by the converter; thus, unit conversion can be described as
+## converting to and from the relevant coherent SI unit.
 
 
 
@@ -16,11 +14,12 @@
 ## 
 ## This section describes the base dimensions in use by the SI. These are *not*
 ## the base dimensions described by the SI brochure; in particular, since this
-## converter cannot handle dimensionless quantities, the quantities of plane and
-## solid angle are described as base dimensions.
+## converter cannot handle dimensionless quantities, an additional base
+## dimension, plane angle, is included to allow these conversions to be well-
+## defined.
 
-## Time.
-B | TIM
+## Duration.
+B | DUR
 
 ## Length.
 B | LEN
@@ -42,9 +41,6 @@ B | LUM
 
 ## Plane angle.
 B | ANG
-
-## Solid angle.
-#B | AGS
 
 
 
@@ -118,72 +114,74 @@ P | Y | 1e24
 ## 
 ## This section describes the named coherent SI units.
 
-## The second.
-U | s | TIM | 1
+## The second, symbol: s, the coherent SI unit of duration.
+U | s | DUR | 1
 
-## The metre.
+## The metre, symbol: m, the coherent SI unit of length.
 U | m | LEN | 1
 
-## The kilogram. For historical reasons, the multiples and submultiples of the
-## kilogram are assigned as though the gram were the coherent SI unit.
+## The kilogram, symbol: kg, the coherent SI unit of mass. For historical
+## reasons, prefixes are assigned to the gram, symbol: g.
 U | g | MAS | 0.001
 
-## The ampere.
+## The ampere, symbol: A, the coherent SI unit of electric current.
 U | A | CUR | 1
 
-## The kelvin.
+## The kelvin, symbol: K, the coherent SI unit of thermodynamic temperature.
 U | K | TMP | 1
 
-## The mole.
+## The mole, symbol: mol, the coherent SI unit of amount of substance.
 U | mol | MOL | 1
 
-## The candela.
+## The candela, symbol: cd, the coherent SI unit of luminous intensity.
 U | cd | LUM | 1
 
-## The radian.
+## The radian, symbol: rad, the coherent SI unit of plane angle. Unlike what is
+## specified in the SI brochure, the radian is *not* dimensionless.
 U | rad | ANG | 1
 
-## The steradian.
+## The steradian, symbol: sr, the coherent SI unit of solid angle. Unlike what
+## is specified in the SI brochure, the steradian is *not* dimensionless.
 U | sr | ANG^2 | 1
 
-## The hertz.
-U | Hz | TIM^-1 | 1
+## The hertz, symbol: Hz, the coherent SI unit of frequency.
+U | Hz | DUR^-1 | 1
 
-## The newton.
-U | N | MAS * LEN * TIM^-2 | 1
+## The newton, symbol: N, the coherent SI unit of force.
+U | N | MAS * LEN * DUR^-2 | 1
 
-## The pascal.
-U | Pa | MAS * LEN^-1 * TIM^-2 | 1
+## The pascal, symbol: Pa, the coherent SI unit of pressure.
+U | Pa | MAS * LEN^-1 * DUR^-2 | 1
 
-## The joule.
-U | J | MAS * LEN^2 * TIM^-2 | 1
+## The joule, symbol: J, the coherent SI unit of energy.
+U | J | MAS * LEN^2 * DUR^-2 | 1
 
-## The watt.
-U | W | MAS * LEN^2 * TIM^-3 | 1
+## The watt, symbol: W, the coherent SI unit of power.
+U | W | MAS * LEN^2 * DUR^-3 | 1
 
 ## The coulomb.
-U | C | CUR * TIM | 1
+U | C | CUR * DUR | 1
 
 ## The volt.
-U | V | MAS * LEN^2 * TIM^-3 * CUR^-1 | 1
+U | V | MAS * LEN^2 * DUR^-3 * CUR^-1 | 1
 
 ## The farad.
-U | F | MAS^-1 * LEN^-2 * TIM^4 * CUR^2 | 1
+U | F | MAS^-1 * LEN^-2 * DUR^4 * CUR^2 | 1
 
 ## The ohm.
-U | Ω | MAS * LEN^2 * TIM^-3 * CUR^-2 | 1
+U | Ω | MAS * LEN^2 * DUR^-3 * CUR^-2 | 1
 
 ## The siemens.
-U | S | MAS^-1 * LEN^-2 * TIM^3 * CUR^2 | 1
+U | S | MAS^-1 * LEN^-2 * DUR^3 * CUR^2 | 1
 
 ## The weber.
-U | Wb | MAS * LEN^2 * TIM^-2 * CUR^-1 | 1
+U | Wb | MAS * LEN^2 * DUR^-2 * CUR^-1 | 1
 
 ## The tesla.
-U | T | MAS * TIM^-2 * CUR^-1 | 1
+U | T | MAS * DUR^-2 * CUR^-1 | 1
 
 ## The henry.
-U | H | MAS * LEN^2 * TIM^-2 * CUR^-2 | 1
+U | H | MAS * LEN^2 * DUR^-2 * CUR^-2 | 1
 
 ## The degree Celsius.
 U | °C | TMP | 1 + 273.15
@@ -195,16 +193,16 @@ U | lm | LUM * ANG^2 | 1
 U | lx | LUM * ANG^2 * LEN^-2 | 1
 
 ## The becquerel.
-U | Bq | TIM^-1 | 1
+U | Bq | DUR^-1 | 1
 
 ## The gray.
-U | Gy | LEN^2 * TIM^-2 | 1
+U | Gy | LEN^2 * DUR^-2 | 1
 
 ## The sievert.
-U | Sv | LEN^2 * TIM^-2 | 1
+U | Sv | LEN^2 * DUR^-2 | 1
 
 ## The katal.
-U | kat | MOL * TIM^-1 | 1
+U | kat | MOL * DUR^-1 | 1
 
 
 
@@ -212,42 +210,42 @@ U | kat | MOL * TIM^-1 | 1
 ## 
 ## This series of records describes non-SI units accepted for use with the SI.
 
-## The minute, defined as exactly 60 seconds.
-U | min | TIM | 60
+## The minute, symbol: min, defined as 60 seconds.
+U | min | DUR | 60
 
-## The hour, defined as exactly 60 minutes.
-U | h | TIM | 3 600
+## The hour, symbol: h, defined as 60 minutes.
+U | h | DUR | 3 600
 
-## The day, defined as exactly 24 hours.
-U | d | TIM | 86 400
+## The day, symbol: d, defined as 24 hours.
+U | d | DUR | 86 400
 
-## The astronomical unit, defined as exactly 149 597 870 700 metres.
+## The astronomical unit, defined as 149 597 870 700 metres.
 U | au | LEN | 149 597 870 700
 
-## The degree, defined as exactly π/180 radians.
+## The degree, defined as π/180 radians.
 U | ° | ANG | π/180 # TODO allow no space between magnitude and symbol
 
-## The minute, defined as exactly 1/60 degrees.
+## The minute, defined as 1/60 degrees.
 U | ′ | ANG | π/10 800 # TODO allow no space between magnitude and symbol
 
-## The second, defined as exactly 1/60 minutes.
+## The second, defined as 1/60 minutes.
 U | ″ | ANG | π/648 000 # TODO allow no space between magnitude and symbol
 
-## The hectare, defined as exactly 10 000 square metres.
-U | ha | LEN^2 | 10 000
+## The are, defined as 100 square metres.
+U | a | LEN^2 | 100
 
-## The litre, defined as exactly 0.001 cubic metres.
+## The litre, defined as 0.001 cubic metres.
 U | l | LEN^3 | 0.001
 U | L | LEN^3 | 0.001 # TODO should we implement A-records?
 
-## The tonne, defined as exactly 1 000 kilograms.
+## The tonne, defined as 1 000 kilograms.
 U | t | MAS | 1 000
 
-## The dalton, accepted to be approximately 1.660 539 066 60(50)e-27 kilograms.
+## The dalton, accepted to be 1.660 539 066 60(50) × 10^-27 kilograms.
 U | da | MAS | 1.660 539 066 60e-27 # TODO flag for inexact
 
-## The electronvolt, defined as exactly 1.602 176 634e-19 joules.
-U | eV | MAS * LEN^2 * TIM^-2 | 1.602 176 634e-19
+## The electronvolt, defined as 1.602 176 634 × 10^-19 joules.
+U | eV | MAS * LEN^2 * DUR^-2 | 1.602 176 634e-19
 
 
 
@@ -293,6 +291,6 @@ U | eV | MAS * LEN^2 * TIM^-2 | 1.602 176 634e-19
 
 ## References
 ## 
-##: Bureau international des poids et mesures, *Le Système international
+## [1]: Bureau international des poids et mesures, *Le Système international
 ##      d'unités / The International System of Units*, 9 ed. Sèvres, France:
 ##      BIPM, 2019.

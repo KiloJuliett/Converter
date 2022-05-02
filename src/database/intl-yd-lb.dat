@@ -1,61 +1,111 @@
-## Database of British Imperial and US Customary units of length and mass.
+## Database of international yard and pound agreement units.
 ## 
-## This file contains descriptions of units of length and mass that follow from
-## the adoption of the international yard and pound avoirdupois and which form
-## the basis for the British Imperial and US Customary systems of units, where
-## they agree.
+## This file contains descriptions of units and items in the British Imperial
+## and US Customary systems of units that follow from the adoption of the
+## international yard and pound avoirdupois, where they agree.
 
 
-## The (international) yard, defined as exactly 0.914 4 metres [1].
+
+## Units of length.
+
+## The (international) yard, symbol: yd, defined as 0.914 4 metres [1].
 U | yd | LEN | 0.914 4
 
-## The (international) foot, defined as exactly 1/3 (international) yards.
+## The (international) foot, symbol: ft, defined as 1/3 (international) yards.
 U | ft | LEN | 0.304 8
 
-## The (international) inch, defined as exactly 1/12 (international) feet.
+## The (international) inch, symbol: in, defined as 1/12 (international) feet.
 U | in | LEN | 0.025 4
 
-## The (international) rod, defined as exactly 16.5 (internationl) feet.
+## The (international) thou, symbol: thou, or alternatively, the (international)
+## mil, symbol: mil, defined as 0.001 (international) inches.
+U | thou | LEN | 0.000 025 4
+U | mil  | LEN | 0.000 025 4
+
+## The (international) rod, symbol: rd, defined as 16.5 (internationl) feet.
 U | rd | LEN | 5.029 2
 
-## The (international) furlong, defined as exactly 40 (international) rods.
+## The (international) furlong, symbol: fur, defined as 40 (international) rods.
 U | fur | LEN | 201.168
 
-## The (international) mile, defined as exactly 8 (international) rods.
+## The (international) mile, symbol: mi, defined as 8 (international) rods.
+## Confusingly, the symbol m is sometimes also used to represent this unit; this
+## behaviour is explicitly *not* implemented by the converter.
 U | mi | LEN | 1 609.344
 
 
 
-# The mile is not defined here...
+## Units of mass.
 
-
-
-## The (international) pound avoirdupois, defined as exactly 0.453 592 37 kg
+## The (international) pound avoirdupois, symbol: lb, defined as 0.453 592 37 kg
 ## [1].
 U | lb | MAS | 0.453 592 37
 
-## The (international) ounce avoirdupois, defined as exactly 1/16 lb.
+## The (international) ounce avoirdupois, symbol: oz, defined as 1/16 lb.
 U | oz | MAS | 0.028 349 523 125
 
+# TODO stone
 
 
-## The pound-force, defined as 1 (international) pound avoirdupois multiplied by
-## the standard acceleration due to gravity (itself defined as exactly
-## 9.806 65 m/s²).
-U | lbf | MAS * LEN * TIM^-2 | 4.448 221 615 260 5
 
-## The ounce-force, defined as 1 (international) ounce avoirdupois multiplied by
-## the standard acceleration due to gravity (itself defined as exactly
-## 9.806 65 m/s²).
-U | ozf | MAS * LEN * TIM^-2 | 0.278 013 850 953 781 25
+## Units of force.
 
-## Sometimes, symbols of units of mass are used to represent their equivalent
-## standard-acceleration-due-to-gravity force units.
-U | lb | MAS * LEN * TIM^-2 | 4.448 221 615 260 5
-U | oz | MAS * LEN * TIM^-2 | 0.278 013 850 953 781 25
+## The (international) pound-force, symbol: lb_f, defined as the (international)
+## pound avoirdupois multiplied by *g*_0. The symbols lb_F, lbf, and lbF are
+## often used to represent this unit for technical expediency. The symbol lb is
+## often used to represent this unit in contexts where the distinction between
+## mass and weight is unimportant.
+U | lb_f | MAS * LEN * DUR^-2 | 4.448 221 615 260 5
+U | lb_F | MAS * LEN * DUR^-2 | 4.448 221 615 260 5
+U | lbf  | MAS * LEN * DUR^-2 | 4.448 221 615 260 5
+U | lbF  | MAS * LEN * DUR^-2 | 4.448 221 615 260 5
+U | lb   | MAS * LEN * DUR^-2 | 4.448 221 615 260 5
+
+## The (international) ounce-force, symbol: oz_f, defined as the (international)
+## ounce avoirdupois multiplied by *g*_0. The symbols oz_F, ozf, and ozF are
+## often used to represent this unit for technical expediency. The symbol oz is
+## often used to represent this unit in contexts where the distinction between
+## mass and weight is unimportant.
+U | oz_f | MAS * LEN * DUR^-2 | 0.278 013 850 953 781 25
+U | oz_F | MAS * LEN * DUR^-2 | 0.278 013 850 953 781 25
+U | ozf  | MAS * LEN * DUR^-2 | 0.278 013 850 953 781 25
+U | ozF  | MAS * LEN * DUR^-2 | 0.278 013 850 953 781 25
+U | oz   | MAS * LEN * DUR^-2 | 0.278 013 850 953 781 25
 
 
-## The (international) pound per square inch (psi)
+
+## Units of pressure.
+
+## The symbol psi is often used to represent the (international) pound-force per
+## square inch.
+U | psi | MAS * LEN^-1 * DUR^-2 | 8 896 443 230 521/1 290 320 000
+
+## The symbol ksi is often used to represent 1 000 (international) pounds-force
+## per square inch.
+U | ksi | MAS * LEN^-1 * DUR^-2 | 8 896 443 230 521/1 290 320
+
+
+
+
+
+
+
+
+
+
+
+## Units of velocity.
+
+## The symbol ips is often used to represent the (international) inch per
+## second.
+U | ips | LEN * DUR^-1 | 0.025 4
+
+## The symbol fps is often used to represent the (international) foot per
+## second.
+U | fps | LEN * DUR^-1 | 0.304 8
+
+## The symbol mph is often used to represent the (international) mile per hour.
+U | mph | LEN * DUR^-1 | 0.447 04
 
 
 

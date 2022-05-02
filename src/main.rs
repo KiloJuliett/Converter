@@ -7,10 +7,8 @@ use std::env;
 use converter::Converter;
 use number::Number;
 
-const DATA_CONVERTER: &[u8] = include_bytes!(env!("PATH_DATA_CONVERTER"));
-
 fn main() {
-    let converter = bincode::deserialize::<Converter>(DATA_CONVERTER).unwrap();
+    let converter = Converter::new();
 
     // TODO advanced parsing
 
