@@ -229,7 +229,7 @@ U | ° | ANG | π/180 # TODO allow no space between magnitude and symbol
 U | ′ | ANG | π/10 800 # TODO allow no space between magnitude and symbol
 
 ## The second, defined as 1/60 minutes.
-U | ″ | ANG | π/648 000 # TODO allow no space between magnitude and symbol
+U | ′′ | ANG | π/648 000 # TODO allow no space between magnitude and symbol
 
 ## The are, defined as 100 square metres.
 U | a | LEN^2 | 100

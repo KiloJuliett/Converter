@@ -587,7 +587,9 @@ macro_rules! impl_arithmetic_noncommutative {
 /// `Number` and `&Number`.
 macro_rules! impl_arithmetic_commutative {
     ($trait:ident, $method:ident, $trait_assign:ident, $method_assign:ident) => {
-        impl_arithmetic_noncommutative!($trait, $method, $trait_assign, $method_assign);
+        impl_arithmetic_noncommutative!(
+            $trait, $method, $trait_assign, $method_assign
+        );
 
         impl $trait<Number> for &Number {
             type Output = Number;
@@ -627,16 +629,14 @@ impl Display for Number {
 
                 write!(formatter, "π")?;
 
-                if value.denom() != &*ONE {
-                // if !value.is_integer() { // TODO waiting for rug 1.14
+                if !value.is_integer() {
                     write!(formatter, "/{}", value.denom())?;
                 }
             },
             Class::Exact(value, -1) => {
                 write!(formatter, "{}", value)?;
 
-                if value.denom() == &*ONE {
-                // if value.is_integer() { // TODO waiting for rug 1.14
+                if value.is_integer() {
                     write!(formatter, "/")?;
                 }
 
@@ -680,16 +680,14 @@ impl Debug for Number {
 
                 write!(formatter, "π")?;
 
-                if value.denom() != &*ONE {
-                // if !value.is_integer() { // TODO waiting for rug 1.14
+                if !value.is_integer() {
                     write!(formatter, "/{}", value.denom())?;
                 }
             },
             Class::Exact(value, -1) => {
                 write!(formatter, "{}", value)?;
 
-                if value.denom() == &*ONE {
-                // if value.is_integer() { // TODO waiting for rug 1.14
+                if value.is_integer() {
                     write!(formatter, "/")?;
                 }
 

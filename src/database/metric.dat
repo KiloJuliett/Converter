@@ -223,14 +223,17 @@ U | cc | LEN^3 | 0.000 001
 ## metres per second.
 ## 
 ## While this isn't so much a "unit" as much as it is a "physical constant",
-## enough things are measured relative to this physical constant that I feel
-## comfortable including it as a unit in its own right.
+## enough things are measured relative to *c* that I feel comfortable including
+## it as a unit in its own right.
 U | c | LEN * DUR^-1 | 299 792 458
 
 ## The symbols kn and kt are used to represent the knot, an alternate name for
 ## the nautical mile per hour.
 U | kn | LEN * DUR^-1 | 463/900
 U | kt | LEN * DUR^-1 | 463/900
+
+## The symbol kph is often used to represent the kilometre per hour.
+U | kph | LEN * DUR^-1 | 5/18
 
 
 
@@ -243,8 +246,8 @@ U | kt | LEN * DUR^-1 | 463/900
 ## gravity are negligible or unimportant.
 ## 
 ## While this isn't so much a "unit" as much as it is a "physical constant",
-## enough things are measured relative to this physical constant that I feel
-## comfortable including it as a unit in its own right.
+## enough things are measured relative to *g*_0 that I feel comfortable
+## including it as a unit in its own right.
 U | g_0 | LEN * DUR^-2 | 9.806 65
 U | g0  | LEN * DUR^-2 | 9.806 65
 U | g   | LEN * DUR^-2 | 9.806 65

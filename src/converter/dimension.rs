@@ -24,7 +24,7 @@ impl Dimension {
 
     /// Parses a dimension string according to some set of bases.
     #[cfg(any(test, not(mainbuild)))]
-    pub fn parse(bases: &HashMap<String, usize>, string: &str)
+    pub fn parse(bases: &HashMap<&str, usize>, string: &str)
     -> Result<Dimension, Error> {
         use anyhow::anyhow;
         use anyhow::ensure;
@@ -52,7 +52,7 @@ impl Dimension {
                     anyhow!("Illegal dimension exponent")
                 )?;
 
-                ensure!(exponent != 0, "Illegal schema");
+                ensure!(exponent != 0, "Illegal dimension exponent");
             }
             // Exponent is unspecified; implied to be 1.
             else {
@@ -84,34 +84,16 @@ impl Dimension {
         self
     }
 
-    // /// Assigns this dimension to its reciprocal.
-    // #[cfg(mainbuild)]
-    // pub fn recip_mut(&mut self) {
-    //     for base in 0..Dimension::MAX_BASES {
-    //         self.data[base] *= -1;
-    //     }
-    // }
-
     /// Returns this dimension raised to some exponent.
     #[cfg(mainbuild)]
     pub fn pow(mut self, exponent: i8) -> Dimension {
-        // self.pow_mut(exponent);
-        // self
-
         for base in 0..Dimension::MAX_BASES {
+            // TODO use checked_mul
             self.data[base] *= exponent;
         }
 
         self
     }
-
-    // /// Assigns this dimension to itself raised to some exponent.
-    // #[cfg(mainbuild)]
-    // pub fn pow_mut(&mut self, exponent: i8) {
-    //     for base in 0..Dimension::MAX_BASES {
-    //         self.data[base] *= exponent;
-    //     }
-    // }
 }
 
 /// Implements computation of multiplication over dimensions.
@@ -119,6 +101,7 @@ impl MulAssign<Dimension> for Dimension {
     #[allow(clippy::suspicious_op_assign_impl)]
     fn mul_assign(&mut self, multiplicand: Dimension) {
         for base in 0..Dimension::MAX_BASES {
+            // TODO use checked_add
             self.data[base] += multiplicand.data[base];
         }
     }
@@ -168,11 +151,11 @@ mod tests {
     #[trace]
     fn test_parse(#[case] expected: Vec<i8>, #[case] string: &str) {
         lazy_static! {
-            static ref BASES: HashMap<String, usize> = hashmap![
+            static ref BASES: HashMap<&'static str, usize> = hashmap![
                 "AAA" => 0,
                 "BBB" => 1,
                 "CCC" => 2,
-            ].into_iter().map(|(k, v)| (k.to_string(), v)).collect::<HashMap<_, _>>();
+            ];
         }
 
         assert!(expected.len() <= Dimension::MAX_BASES);

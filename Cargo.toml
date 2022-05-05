@@ -15,7 +15,7 @@ bincode = "1.3"
 lazy_static = "1.4"
 maplit = "1.0"
 regex = "1.5"
-rug = {version = "1.13", features = ["serde"]}
+rug = {version = "1.15", features = ["serde"]}
 serde = {version = "1.0", features = ["derive"]}
 static_assertions = "1.1"
 unicode-normalization = "0.1"
@@ -24,8 +24,6 @@ unicode-normalization = "0.1"
 criterion = "0.3"
 itertools = "0.10"
 rstest = "0.12"
-tempfile = "3.2"
-test-case = "1.2"
 
 [build-dependencies]
 anyhow = "1.0"
@@ -36,9 +34,7 @@ lazy_static = "1.4"
 maplit = "1.0"
 regex = "1.5"
 rstest = "0.12"
-rug = {version = "1.13", features = ["serde"]}
+rug = {version = "1.15", features = ["serde"]}
 serde = {version = "1.0", features = ["derive"]}
 static_assertions = "1.1"
-tempfile = "3.2"
-test-case = "1.2"
 unicode-normalization = "0.1"

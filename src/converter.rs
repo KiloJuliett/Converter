@@ -9,7 +9,7 @@ use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
-#[cfg(any(test, not(mainbuild)))] use std::path::Path;
+#[cfg(any(test, not(mainbuild)))] use std::str::FromStr;
 use unicode_normalization::UnicodeNormalization;
 
 use crate::converter::dimension::Dimension;
@@ -27,228 +27,20 @@ pub struct Converter {
     /// their dimensions.
     units: HashMap<String, HashMap<Dimension, (Number, Number)>>,
 
-    /// The aliases in this converter, organized by their symbols and then their
-    /// dimensions.
-    aliases: HashMap<String, HashMap<Dimension, String>>,
+    // /// The aliases in this converter, organized by their symbols and then their
+    // /// dimensions.
+    // aliases: HashMap<String, HashMap<Dimension, String>>,
 
     // TODO relations
     // TODO designations
 }
 
 impl Converter {
-    /// Parses the given database files and builds a unit converter.
-    /// 
-    /// This function reads the given files and parses it according to the rules
-    /// of record files, building a unit converter and returning it.
-    /// 
-    /// This function is not available at runtime. This function is meant to
-    /// only be run during compilation; therefore, it is not compiled into the
-    /// main binary.
-    #[cfg(any(test, not(mainbuild)))]
-    pub fn build(paths: Vec<impl AsRef<Path>>) -> Result<Converter, Error> {
-        use std::fs::File;
-        use std::io::BufRead;
-        use std::io::BufReader;
-        use std::vec;
-
-        const DELIMITER_COMMENT: char = '#';
-        const DELIMITER_RECORD: char = '|';
-
-        let mut records_bases = vec![];
-        let mut records_prefixes = vec![];
-        let mut records_units = vec![];
-        let mut records_aliases = vec![];
-
-        for path in paths.iter() {
-            let path = path.as_ref();
-            let file = File::open(path)?;
-
-            for (line, number) in BufReader::new(file).lines().zip(1..) {
-                let line = line?;
-                let mut line = line.as_str();
-
-                // Strip comments
-                if let Some((record, _)) = line.split_once(DELIMITER_COMMENT) {
-                    line = record;
-                }
-
-                // Strip whitespace.
-                line = line.trim();
-
-                // Skip empty lines
-                if line.is_empty() {
-                    continue;
-                }
-
-                // Split line into strings and strip whitespace some more.
-                let mut record = line.split(DELIMITER_RECORD).map(|string_record| {
-                    string_record.trim().to_string()
-                });
-
-                let type_record = record.next().unwrap();
-                let record = record.collect::<Vec<String>>();
-
-                // Sort the record.
-                let records = match type_record.as_str() {
-                    "B" => &mut records_bases,
-                    "P" => &mut records_prefixes,
-                    "U" => &mut records_units,
-                    "A" => &mut records_aliases,
-
-                    _ =>
-                        bail!("{}:{}: Unknown record type", path.display(), number),
-                };
-
-                records.push((record, path, number));
-            }
-        }
-
-        /// Processes records with a record processor.
-        fn process_records(
-            records: Vec<(Vec<String>, &Path, usize)>,
-            mut processor: impl FnMut(Vec<String>) -> Result<(), Error>)
-        -> Result<(), Error> {
-            for (record, path, number) in records {
-                processor(record).map_err(|error| {
-                    anyhow!("{}:{}: {}", path.display(), number, error)
-                })?
-            }
-
-            Ok(())
-        }
-
-        /// Converts the given record into an array for unboxing.
-        fn into_array<const N: usize>(record: Vec<String>)
-        -> Result<[String; N], Error> {
-            match record.try_into() {
-                Ok(record) => Ok(record),
-                Err(_) => bail!("Illegal argument count")
-            }
-        }
-
-        let mut bases = HashMap::new();
-        let mut prefixes = HashMap::new();
-        let mut units = HashMap::new();
-        let mut aliases = HashMap::new();
-
-        // Insert the "identity prefix."
-        prefixes.insert(String::new(), Number::one_exact());
-
-        // Process base dimensions (B-records).
-        process_records(records_bases, |record| {
-            lazy_static! {
-                static ref REGEX: Regex = Regex::new(r"^[A-Z]{3}$").unwrap();
-            }
-
-            let [string_base] = into_array(record)?;
-
-            ensure!(REGEX.is_match(&string_base), "Illegal base dimension");
-            ensure!(bases.len() < Dimension::MAX_BASES, "More than {} base dimensions are unsupported", Dimension::MAX_BASES);
-
-            // Assign a unique sequential ID to the base.
-            if bases.insert(string_base, bases.len()).is_some() {
-                bail!("Duplicate base dimension");
-            }
-
-            Ok(())
-        })?;
-
-        // TODO R
-
-        // Process prefixes for named units (P-records).
-        process_records(records_prefixes, |record| {
-            lazy_static! {
-                static ref REGEX: Regex = Regex::new(r"^\w+$").unwrap();
-            }
-
-            let [prefix, magnitude] = into_array(record)?;
-
-            ensure!(REGEX.is_match(&prefix), "Illegal prefix");
-
-            let magnitude = magnitude.parse::<Number>()?;
-
-            // TODO Are negative magnitudes sensible?
-            ensure!(magnitude != Number::zero_exact(), "Illegal prefix magnitude");
-
-            if prefixes.insert(prefix, magnitude).is_some() {
-                bail!("Duplicate prefix");
-            }
-
-            Ok(())
-        })?;
-
-        // Process named units (U-records).
-        process_records(records_units, |record| {
-            const DELIMITER_AFFINE: char = '+';
-
-            let [symbol, string_dimension, transformation] = into_array(record)?;
-
-            // TODO validate symbol
-
-            // And then the LORD said, "Let symbols be canonicalized according
-            // to the semantics of NFKC normalization:" and it was so.
-            let symbol = symbol.nfkc().collect::<String>();
-
-            let dimension = Dimension::parse(&bases, string_dimension.as_str())?;
-
-            let magnitude;
-            let offset;
-
-            // Magnitude and offset specified
-            if let Some((string_magnitude, string_offset))
-            = transformation.split_once(DELIMITER_AFFINE) {
-                magnitude = string_magnitude.parse::<Number>()?;
-                offset = string_offset.parse::<Number>()?;
-            }
-            // Only magnitude specified
-            else {
-                magnitude = transformation.parse::<Number>()?;
-                offset = Number::zero_exact();
-            }
-
-            // Generate prefixed units.
-            for (prefix, magnitude_prefix) in prefixes.iter() {
-                let symbol_prefixed = format!("{}{}", prefix, symbol);
-                let magnitude_prefixed = &magnitude * magnitude_prefix;
-
-                if units.entry(symbol_prefixed).or_insert_with(HashMap::new)
-                .insert(dimension, (magnitude_prefixed, offset.clone()))
-                .is_some() {
-                    bail!("Duplicate unit");
-                }
-            }
-
-            Ok(())
-        })?;
-
-        // Process aliases (A-records).
-        process_records(records_aliases, |record| {
-            let [symbol_alias, symbol_aliasee, string_dimension] = into_array(record)?;
-
-            // TODO validate symbols
-
-            let dimension = Dimension::parse(&bases, string_dimension.as_str())?;
-
-            // Generate prefixed aliases.
-            for (prefix, _) in prefixes.iter() {
-                let symbol_alias_prefixed = format!("{}{}", prefix, symbol_alias);
-                let symbol_aliasee_prefixed = format!("{}{}", prefix, symbol_aliasee);
-
-                if aliases.entry(symbol_alias_prefixed).or_insert_with(HashMap::new)
-                .insert(dimension, symbol_aliasee_prefixed).is_some() {
-                    bail!("Duplicate alias");
-                }
-            }
-
-            Ok(())
-        })?;
-
-        Ok(Converter {units, aliases})
-    }
-
     /// Returns a new unit converter.
     #[cfg(mainbuild)]
     pub fn new() -> Converter {
+        /// Converter prebuilt during compilation time. The contents are
+        /// generated by the build script.
         const DATA_CONVERTER: &[u8] = include_bytes!(env!("PATH_DATA_CONVERTER"));
 
         bincode::deserialize::<Converter>(DATA_CONVERTER).unwrap()
@@ -429,8 +221,6 @@ impl Converter {
 
             // Add the reciprocal dimension (assuming it isn't dimensionless).
             if dimension != Dimension::dimensionless() {
-                // dimension.recip_mut();
-
                 dimension = dimension.recip();
 
                 add(dimension, (true, transformation))?;
@@ -480,9 +270,241 @@ impl Converter {
     }
 }
 
+/// Implements parsing of strings into converters.
+#[cfg(any(test, not(mainbuild)))]
+impl FromStr for Converter {
+    type Err = Error;
+
+    fn from_str(string: &str) -> Result<Converter, Error> {
+        const DELIMITER_COMMENT: char = '#';
+        const DELIMITER_RECORD: char = '|';
+
+        let mut records_bases = vec![];
+        let mut records_prefixes = vec![];
+        let mut records_units = vec![];
+        // let mut records_aliases = vec![];
+
+        for (mut line, number_line) in string.lines().zip(1..) {
+            // Strip comments
+            if let Some((record, _)) = line.split_once(DELIMITER_COMMENT) {
+                line = record;
+            }
+
+            // Strip whitespace.
+            line = line.trim();
+
+            // Skip empty lines
+            if line.is_empty() {
+                continue;
+            }
+
+            // Split line into strings and strip whitespace some more.
+            let mut record = line.split(DELIMITER_RECORD).map(|string_record| {
+                string_record.trim()
+            });
+
+            let type_record = record.next().unwrap();
+            let record = record.collect::<Vec<&str>>();
+
+            // Sort the record.
+            let records = match type_record {
+                "B" => &mut records_bases,
+                "P" => &mut records_prefixes,
+                "U" => &mut records_units,
+                // "A" => &mut records_aliases,
+
+                _ =>
+                    bail!("{}: Unknown record type: {}", number_line, type_record),
+            };
+
+            records.push((record, number_line));
+        }
+
+        /// Processes records with a record processor.
+        macro_rules! process_records {
+            ($records:expr, $processor:expr) => {
+                for (record, number_line) in $records {
+                    ($processor)(record).map_err(|error| {
+                        anyhow!("{}: {}", number_line, error)
+                    })?;
+                }
+            };
+        }
+
+        /// Converts the given record into an array for unboxing.
+        fn into_array<const N: usize>(record: Vec<&str>)
+        -> Result<[&str; N], Error> {
+            record.try_into().map_err(|record: Vec<&str>|
+                anyhow!("Illegal argument count: expected {}, got {}", N + 1, record.len() + 1)
+            )
+        }
+        
+        let mut bases = HashMap::new();
+        let mut prefixes = HashMap::new();
+        let mut units = HashMap::new();
+        // let mut aliases = HashMap::new();
+
+        // Process base dimensions (B-records).
+        process_records!(records_bases, |record| {
+            lazy_static! {
+                static ref REGEX: Regex = Regex::new(r"^[A-Z]{3}$").unwrap();
+            }
+
+            let [string_base] = into_array(record)?;
+
+            ensure!(REGEX.is_match(string_base), "Illegal base dimension");
+            ensure!(bases.len() < Dimension::MAX_BASES, "More than {} base dimensions are unsupported", Dimension::MAX_BASES);
+
+            // Assign a unique sequential ID to the base.
+            if bases.insert(string_base, bases.len()).is_some() {
+                bail!("Duplicate base dimension");
+            }
+
+            Ok(())
+        });
+
+        // TODO R
+
+        // Process prefixes for named units (P-records).
+        process_records!(records_prefixes, |record| {
+            lazy_static! {
+                // TODO this may prove to be an unnecessarily strict regex.
+                static ref REGEX: Regex = Regex::new(r"^\w+$").unwrap();
+            }
+
+            let [prefix, magnitude] = into_array(record)?;
+
+            ensure!(REGEX.is_match(prefix), "Illegal prefix");
+            ensure!(unicode_normalization::is_nfkc(prefix), "Prefix must be in NFKC form");
+
+            let magnitude = magnitude.parse::<Number>().map_err(|_|
+                anyhow!("Illegal magnitude")
+            )?;
+
+            // TODO answer some very deep questions about what a prefix even
+            // *is* and what values for its magnitude are even sensible. My gut
+            // tells me that a prefix magnitude must be a nonnegative exact
+            // number, but I'm not willing to die on that hill.
+
+            ensure!(magnitude != Number::zero_exact(), "Magnitude must be nonzero");
+
+            if prefixes.insert(prefix, magnitude).is_some() {
+                bail!("Duplicate prefix");
+            }
+
+            Ok(())
+        });
+
+        // Process named units (U-records).
+        process_records!(records_units, |record| {
+            const DELIMITER_AFFINE: char = '+';
+
+            let [symbol, string_dimension, transformation] = into_array(record)?;
+
+            // TODO validate symbol
+
+            ensure!(unicode_normalization::is_nfkc(symbol), "Symbol must be in NFKC form");
+
+            let dimension = Dimension::parse(&bases, string_dimension).map_err(|_|
+                anyhow!("Illegal dimension")
+            )?;
+
+            let magnitude;
+            let offset;
+
+            // Magnitude and offset specified
+            if let Some((string_magnitude, string_offset))
+            = transformation.split_once(DELIMITER_AFFINE) {
+                magnitude = string_magnitude.parse::<Number>().map_err(|_|
+                    anyhow!("Illegal magnitude")
+                )?;
+
+                offset = string_offset.parse::<Number>().map_err(|_|
+                    anyhow!("Illegal offset")
+                )?;
+            }
+            // Only magnitude specified
+            else {
+                magnitude = transformation.parse::<Number>().map_err(|_|
+                    anyhow!("Illegal magnitude")
+                )?;
+
+                offset = Number::zero_exact();
+            }
+
+            // Inserts the given unit (symbol, magnitude, and offset) into the
+            // database.
+            let mut insert_unit = |
+                symbol: String,
+                magnitude: Number,
+                offset: Number
+            | -> Result<(), Error> {
+                if units.entry(symbol).or_insert_with(HashMap::new)
+                .insert(dimension, (magnitude, offset))
+                .is_some() {
+                    bail!("Duplicate unit");
+                }
+
+                Ok(())
+            };
+
+            insert_unit(symbol.to_string(), magnitude.clone(), offset.clone())?;
+
+            // Generate prefixed units.
+            for (prefix, magnitude_prefix) in prefixes.iter() {
+                let symbol_prefixed = format!("{}{}", prefix, symbol);
+                let magnitude_prefixed = &magnitude * magnitude_prefix;
+
+                // The base symbol and the prefix should be in NFKC; however,
+                // the concatenation of two NFKC strings is *not necessarily*
+                // NFKC; therefore, it is necessary to renormalize.
+                let symbol_prefixed
+                = symbol_prefixed.nfkc().collect::<String>();
+
+                insert_unit(
+                    symbol_prefixed.clone(),
+                    magnitude_prefixed,
+                    offset.clone()
+                ).map_err(|_|
+                    anyhow!("Duplicate prefixed unit: {}", symbol_prefixed)
+                )?;
+            }
+
+            Ok(())
+        });
+
+        // // Process aliases (A-records).
+        // process_records!(records_aliases, |record| {
+        //     let [symbol_alias, symbol_aliasee, string_dimension] = into_array(record)?;
+
+        //     todo!("Aliases are not supported yet");
+
+        //     // TODO validate symbols
+
+        //     let dimension = Dimension::parse(&bases, string_dimension)?;
+
+        //     // Generate prefixed aliases.
+        //     for (prefix, _) in prefixes.iter() {
+        //         let symbol_alias_prefixed = format!("{}{}", prefix, symbol_alias);
+        //         let symbol_aliasee_prefixed = format!("{}{}", prefix, symbol_aliasee);
+
+        //         if aliases.entry(symbol_alias_prefixed).or_insert_with(HashMap::new)
+        //         .insert(dimension, symbol_aliasee_prefixed).is_some() {
+        //             bail!("Duplicate alias");
+        //         }
+        //     }
+
+        //     Ok(())
+        // });
+
+        // Ok(Converter {units, aliases})
+        Ok(Converter {units})
+    }
+}
 
 
-/// The converter `impl`, despite only being a couple hundred lines, has to
+
+/// The converter body, despite only being a couple hundred lines, has to
 /// correctly handle tons of bizarre and often inconsistent edge cases, so as
 /// you can imagine, it comes with an extremely large battery of tests. And in
 /// case you were wondering, the vast majority of the not exactly supersonic
@@ -492,8 +514,6 @@ mod tests {
     use super::*;
 
     use rstest::rstest;
-    use std::io::Write;
-    use tempfile::NamedTempFile;
 
     /// Asserts that the given converter correctly converts.
     macro_rules! assert_converter {
@@ -554,18 +574,8 @@ mod tests {
                 #[case] magnitude_source: &str,
             ) {
                 lazy_static! {
-                    static ref CONVERTER: Result<Converter, Error> = {
-                        // Write the test input to a temporary file.
-                        let (mut file_temp, path_temp)
-                        = NamedTempFile::new().unwrap().into_parts();
-
-                        file_temp.write_all($input.as_bytes()).unwrap();
-                        
-                        // Make sure data is written.
-                        drop(file_temp);
-
-                        Converter::build(vec![path_temp])
-                    };
+                    static ref CONVERTER: Result<Converter, Error>
+                    = $input.parse();
                 }
 
                 // Ensure the converter exists.
